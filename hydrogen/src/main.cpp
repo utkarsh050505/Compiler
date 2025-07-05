@@ -4,80 +4,14 @@
 #include "optional"
 #include "vector"
 
-enum class TokenType {
-    _return,
-    int_lit,
-    semi
-};
+#include "tokenization.hpp"
 
-struct Token {
-    TokenType type;
-    std::optional<std::string> value {};    
-}; // Done this to Lex the things, or tokenize it.
 
 /* If we see a letter, we start reading it into a buffer, and when we encounter a space, we can determine
  what the value of the buffer is, if it is a keyword, then we can use it as a keyword
  otherwise we will treat it as a identifier, like variable name, func name etc.
  */
 std::vector<Token> tokenize(const std::string& str) {
-
-    std::vector<Token> tokens;
-
-    std::string buf;
-
-    for (int i = 0; i < str.length(); i++) {
-        char c = str.at(i);
-
-        if (std::isalpha(c)) {
-            buf.push_back(c);
-            i++;
-
-            while (i < str.length() && std::isalnum(str.at(i))) {
-                buf.push_back(str.at(i));
-                i++;
-            }
-            i--;
-
-            if (buf == "ret") {
-                tokens.push_back({.type = TokenType::_return});
-                buf.clear();
-                continue;
-            }
-            else {
-                std::cerr << "You messed up!" << std::endl;
-                exit(1);
-            }
-        }
-
-        else if (std::isdigit(c)) {
-            buf.push_back(c);
-            i++;
-
-            while (i < str.length() && std::isdigit(str.at(i))) {
-                buf.push_back(str.at(i));
-                i++;
-            }
-            i--;
-
-            tokens.push_back({.type = TokenType::int_lit, .value = buf});
-            buf.clear();
-        }
-
-
-        else if (c == ';') {
-            tokens.push_back({.type = TokenType::semi});
-        }
-
-        else if (std::isspace(c)) {
-            continue;
-        }
-
-        else {
-            std::cerr << "You messed up!" << std::endl;
-            exit(1);
-        }
-    }
-    return tokens;
 }
 
 std::string token_to_asm(const std::vector<Token>& tokens) {
